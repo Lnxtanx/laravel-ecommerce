@@ -4,7 +4,7 @@ FROM php:8.2-fpm
 # Set working directory
 WORKDIR /var/www
 
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -21,23 +21,20 @@ RUN docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd
 # Install Composer
 COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
 
-# Copy dependency files first
-COPY composer.json composer.lock ./
-
-# Install PHP dependencies for production
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
-# Copy the rest of the application
+# Copy application files (including artisan)
 COPY . .
+
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Environment variables
+# Set environment variable
 ENV PORT=10000
 
-# Expose Render's expected port
+# Expose port for Render
 EXPOSE 10000
 
-# Start Laravel with built-in server
+# Start Laravel using built-in server
 CMD php -S 0.0.0.0:$PORT -t public
