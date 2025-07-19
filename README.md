@@ -60,46 +60,22 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-# Deploying to Render.com
+# Deploying to Render
 
-You can easily deploy this Laravel app to [Render.com](https://render.com/). Follow these steps:
+This application is configured for production deployment on [Render](https://render.com/) using Docker.
 
-## 1. Prerequisites
-- Make sure your repo is on GitHub, GitLab, or Bitbucket.
-- Your `composer.json` and `artisan` file are in the root of the `laravel-ecommerce` directory.
+## Render Service Setup
 
-## 2. Render Service Setup
-- Go to [Render Dashboard](https://dashboard.render.com/) and click **New Web Service**.
-- Connect your repo and select the `laravel-ecommerce` directory as the root.
+1.  Go to your Render Dashboard and create a new **Web Service**.
+2.  Connect your GitHub/GitLab repository.
+3.  Set the **Environment** to **Docker**.
 
-## 3. Environment
-- **Runtime:** PHP
-- **Build Command:**
-  ```sh
-  composer install --no-dev --optimize-autoloader
-  php artisan key:generate
-  php artisan migrate --force || true
-  ```
-- **Start Command:**
-  ```sh
-  php artisan serve --host 0.0.0.0 --port 10000
-  ```
-- **Environment Variables:**
-  - `APP_ENV=production`
-  - `APP_KEY` (will be set by `php artisan key:generate`)
-  - `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` (if using a database)
+## Configuration
 
-## 4. Storage & Permissions
-- Add a Render **Persistent Disk** for `/laravel-ecommerce/storage` if you need file uploads.
-- Make sure the `storage` and `bootstrap/cache` directories are writable:
-  ```sh
-  chmod -R 777 storage bootstrap/cache
-  ```
+*   **Start Command**: `start.sh`
+*   **Build Command**: Leave this blank. The build is handled by the `Dockerfile`.
+*   **Environment Variables**: Add your production environment variables, such as `APP_KEY`, `DB_CONNECTION`, etc. Render will provide connection details for its managed databases.
 
-## 5. Webroot
-- Set the web root to `/laravel-ecommerce/public` in Render's settings.
+## Persistent Storage
 
-## 6. Done!
-- Visit your Render URL to see your deployed Laravel app.
-
----
+If your application needs to store user-uploaded files, add a **Persistent Disk** on Render and mount it to the path `/var/www/storage/app/public`.
