@@ -2,6 +2,12 @@
 
 set -e
 
+echo "Clearing previous application caches..."
+php artisan optimize:clear
+
+echo "Caching configuration for production..."
+php artisan config:cache
+
 echo "Running database migrations..."
 php artisan migrate --force
 

@@ -63,8 +63,6 @@ RUN mkdir -p /var/www/storage/framework/sessions \
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 RUN chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-RUN php artisan config:cache && php artisan route:cache && php artisan view:cache
-
 COPY nginx.conf /etc/nginx/http.d/default.conf
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
